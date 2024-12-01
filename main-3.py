@@ -1,38 +1,18 @@
 from ptw_sony_interface import Camera, ConnectionError
 import subprocess
 
+##### CONFIGURATION #####
+
 # path to .exe file
 dir_path = r"C:\\Users\\serra\\OneDrive\\Documentos\\WiP\\HiWi\\Alex\\build\\Debug\\RemoteCli.exe"
 
+# Set the Photo Configuration: see the documentation to find the right parameters
+# set ISO
+# set Shutter Speed
+# set Aperture
 
-class Camera():
-    def __init__(self, abs_path):
-        self.abs_path = abs_path
-        x = self.connection()
-        if x == 0:
-            self.start_menu()
-        else:
-            return 1
 
-    # establish connection
-    def connection(self):
-        try:
-            # Inicia o subprocesso
-            self.process = subprocess.Popen(
-                [self.abs_path],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                bufsize=1  # Linha a linha
-            )
-            return 0
-        except:
-            print('Failed to connect with the camera')
-            return 1
 
-    def start_menu(self):
-        pass
 
 
 sony_7r = Camera()
