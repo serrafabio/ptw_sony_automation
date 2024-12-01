@@ -1,2 +1,2 @@
 # ptw_sony_automation
-This repository consist of the programming to automate the Sony ILCE-7RM5 using its SDK to automate the camera functionalities
+This repository consist of the programming to automate the Sony ILCE-7RM5 using its SDK to automate the camera functionalities.
