@@ -1,41 +1,72 @@
-## PUT THIS ALL IN ONE CELL!
+"""
+
+Developer: Fabio Serra Pereira (serrafabio10@outlook.com)
+GOAL: this script connect the camera with opencv display.
+
+REQUIREMENT: this script needs an additional software to work, available in: https://support.d-imaging.sony.co.jp/app/webcam/en/download/
+NOTICE: this script only works while the camera is not connected to the RemoteCli.exe
+"""
+########## IMPORT PACKAGES ############
 import cv2
 
-def listar_cameras():
+######## CONFIGURATION ################
+# select the camera image to mirror:
+cam = 3
+
+########## FUNCTIONS #################
+# this function will help to identify the available camera
+def list_cameras():
     index = 0
-    print("Procurando dispositivos de câmera...")
+    print("Searching for available devices...")
     while True:
         cap = cv2.VideoCapture(index)
         if not cap.isOpened():
             break
-        print(f"Câmera disponível no índice: {index}")
+        print(f"Camera available by the index of: {index}")
         cap.release()
         index += 1
 
     if index == 0:
-        print("Nenhuma câmera detectada.")
+        print("None camera detected.")
+# list the camera available to select the right one
+list_cameras()
 
-listar_cameras()
+# connect the opencv with the following camera:
+cap = cv2.VideoCapture(cam)
 
-cap = cv2.VideoCapture(2)  # Use 0 para a câmera padrão
-
+# if error to connect with the camera
 if not cap.isOpened():
-    print("Erro ao acessar a câmera.")
+    print("Error to access the camera.")
     exit()
-while True:
-    # Captura um único frame
+# check if the program is not running
+# here we set a command, if the main script is running the video must be stopped
+# if 0 is the value in the file, it must stop the video, otherwise it can show the video
+f = open("stop_opencv.txt", 'w')
+f.write("1")
+value = 1
+while value == 1:
+    # Capture a frame
     ret, frame = cap.read()
     if ret:
-        # Exibe a imagem capturada
-        cv2.imshow('Imagem Colorida', frame)
+        # Show the image
+        cv2.imshow('Colourful image', frame)
     else:
-        print("Erro ao capturar a imagem.")
+        print("Error to get the image.")
 
-    # This command let's us quit with the "q" button on a keyboard.
-    # Simply pressing X on the window won't work!
+    with open("stop_opencv.txt", 'r') as f:
+        value = int(f.read())
+
+    # verify if the key 'q' was pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
+        value = 0
         break
 
-# Libera a câmera e fecha as janelas
+    # Verify if the windows was closed
+    if cv2.getWindowProperty('Colourful image', cv2.WND_PROP_VISIBLE) < 1:
+        print("Window closed by the user.")
+        value = 0
+        break
+
+# Release the camera and destroy
 cap.release()
 cv2.destroyAllWindows()
