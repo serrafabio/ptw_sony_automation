@@ -103,8 +103,11 @@ class Camera():
         except Exception as e:
             print(f"Error to interact with the process: {e}")
         finally:
-            # Close stdin and the connection
-            self.process.stdin.close()
-            self.process.wait()
-            stdout_thread.join()
-            stderr_thread.join()
+            try:
+                # Close stdin and the connection
+                self.process.stdin.close()
+                self.process.wait()
+                stdout_thread.join()
+                stderr_thread.join()
+            except:
+                print("Camera is not connected to the computer")

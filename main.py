@@ -1,74 +1,47 @@
-# This is a sample Python script.
-import os
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+"""
 
-import subprocess
+Developer: Fabio Serra Pereira (serrafabio10@outlook.com)
+GOAL: this is the controller script, which will start the camera controller and start and stop the opencv, if its necessary.
+ The main goal is to take a photo with the camera
+
+REQUIREMENT: this script only work with the RemoteCli.exe - notice to give the right path in the main function
+"""
+import os
 import time
 
+from ptw_sony_camera import Camera
 
-def photo_subprocess(process):
-    # Shut photo
-    process.stdin.write("3\n")
-    process.stdin.flush()
-    # photo
-    process.stdin.write("y\n")
-    process.stdin.flush()
+##### CONFIGURATION #####
 
-# Press the green button in the gutter to run the script.
+# path to .exe file: You need to specify the path where the build was made -  PATH OF SDK/build/Debug/RemoteCli.exe
+dir_path = r"C:\\Users\\serra\\OneDrive\\Documentos\\WiP\\HiWi\\Alex\\build\\Debug\\RemoteCli.exe"
+
+# Set the Photo Configuration: see the documentation to find the right parameters
+# set the parameters configuration?
+# don't forget to set the camera to the manual mode
+set_parms_config = False
+# set ISO
+ISO = "1"
+# set Shutter Speed
+shutter_speed= "1"
+# set Aperture
+aperture = "1"
+
+####### main Script #######
 if __name__ == '__main__':
-    # executable file
-    dir_path = r"C:\\Users\\serra\\OneDrive\\Documentos\\WiP\\HiWi\\Alex\\"
-    abs_path = dir_path + r"build\\Debug\\RemoteCli.exe"
-    number_of_photos = 24
-    take_one_photo = True
-    # Connect with input command line
-    process = subprocess.Popen([abs_path], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    try:
-        # Enviar o comando "1" e pressionar ENTER
-        process.stdin.write("1\n")
-        process.stdin.flush()
-        time.sleep(4)
-        # Connect Remote control mode
-        process.stdin.write("1\n")
-        process.stdin.flush()
-        time.sleep(4)
-        # shutter release
-        process.stdin.write("1\n")
-        process.stdin.flush()
-        time.sleep(4)
-        # Shut photo
-        process.stdin.write("3\n")
-        process.stdin.flush()
-        time.sleep(4)
-        # photo
-        process.stdin.write("y\n")
-        process.stdin.flush()
-        time.sleep(4)
-
-
-
-        # Ler a saída (se o programa imprime algo)
-        while True:
-            output = process.stdout.readline()
-            if output == "" and process.poll() is not None:
-                break
-            if output:
-                print("Saída:", output.strip())
-    except Exception as e:
-        print("Erro:", e)
-    finally:
-        # Garantir que o processo seja encerrado
-        process.stdin.close()
-        process.stdout.close()
-        process.stderr.close()
-        process.terminate()
-
-
-
-    # move all pictures to the
-    #os.system(f"copy {dir_path}build\\Debug\\*.jpg {dir_path}Python_automation\\photos\\")
-
-
-
-
+    # close the opencv if it is open
+    with open("stop_opencv.txt", 'w') as f:
+        f.write("0")
+    # wait 5 sec
+    time.sleep(5)
+    # start the camera
+    sony_7r = Camera(dir_path)
+    # configure the parameters in the camera
+    if set_parms_config:
+        sony_7r.set_ISO(ISO)
+        sony_7r.set_shutterspeed(shutter_speed)
+        sony_7r.set_aperture(aperture)
+    # shut picture
+    sony_7r.trigger_photo()
+    # reopen the opencv
+    os.system("python .\opencv.py")

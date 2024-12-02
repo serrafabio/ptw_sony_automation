@@ -1,2 +1,193 @@
 # ptw_sony_automation
-This repository consist of the programming to automate the Sony ILCE-7RM5 using its SDK to automate the camera functionalities.
+This repository consist of the programming to automate the [Sony ILCE-7RM5](https://www.sony.de/interchangeable-lens-cameras/products/ilce-7rm5) using its SDK to automate the camera functionalities.
+
+# Requirements
+To run this software the following tools are required:
+ - [ ] [Imaging Edge Webcam](https://support.d-imaging.sony.co.jp/app/webcam/en/download/)
+ - [ ] [Camera Remote SDK](https://support.d-imaging.sony.co.jp/app/sdk/en/index.html)
+ - [ ] [LibusbK Files](https://sourceforge.net/projects/libusbk/files/libusbK-release/3.1.0.0/)
+ - [ ] [Visual Studio 2022](https://visualstudio.microsoft.com/vs/)
+ - [ ] [Cmake 3.31-1: Windows x64 ZIP](https://cmake.org/download/) --> follow [this video](https://www.youtube.com/watch?v=8_X5Iq9niDE) for the correct installation. Restart your pc if its necessary.
+ - [ ] [Windows SDK version 10.0 (and above)](https://developer.microsoft.com/en-gb/windows/downloads/windows-sdk/) --> install either via Visual Studio or via [this video instructions](https://www.youtube.com/watch?v=dk6BYxr3Ovk)
+
+Python packages required:
+ - [ ] [OpenCV2 4.10.0.84](https://pypi.org/project/opencv-python/)
+ - [ ] [Nanoleafapi 2.1.2](https://pypi.org/project/nanoleafapi/)
+
+# Starting the Camera and the SDK
+
+## Connect to the camera
+the following instructions were gotten from the Sony SDK Instruction Manual, available in the Camera Remote SDK Folder:
+1. Install the Libusbk Files
+2. Connect the camera
+3. With the camera connected follow the instructions of the image
+
+![img.png](img.png)
+![img_1.png](img_1.png)
+
+4. Check if the camera is connected with the "Device Manager", it must be in the "libusbK Usb Device" with the name "ILCE-7RM5"
+
+## Build Sony SDK
+The following instructions were gotten from the Sony SDK Instruction manual:
+1. Extract the SDK in folder, where you want to build
+2. in the folder extracted, do: mkdir build
+3. cd build
+4. cmake -A "x64" -T "v143,host=x64" ..
+5. you will find the solution to be opened via Visual Studio in: ./build/RemoteCli.sln
+6. After opened, you need to build it.
+7. You will find the RemoteCli.exe under the ./build/Debug/RemoteCli.exe
+
+NOTE: if it doesn't work, restart your computer
+NOTE 2: Changing the path for the RemoteCli.exe can bring deviations to the SDK Software
+
+# Explanation of the Scripts
+## Description
+This repository contains 4 single scripts which offer the automation of the platform, controlling the lights LEDs, shutting a photo in the camera and mirror the image of the camera in the pc. The 
+scripts main.py, opencv.py and nanoleaf_script.py **must run independently**.
+
+## Scripts
+The 4 scripts presented are:
+- [ ] main.py: this script control the ptw_sony_camera.py, configuring the camera manually with ISO, Shutter Speed and Aperture. The taken picture must be saved in the directory where the main.py 
+  function is located.
+- [ ] ptw_sony_camera.py: class with the control and connection with the RemoteCli.exe file. It can control the ISO, Shutter Speed and Aperture if the camera is the MANUAL mode. This class take a 
+  single picture and store in the path where the python script is located.
+- [ ] opencv.py: script to connect the camera and display the video as webcam in the computer.
+- [ ] nanoleaf_script.py: this script controls the LEDS and turn on the selected LED.
+
+## How to use?
+the scripts contain in the begging of their sections " ### configuration ### " tab, which the user must interact to the script to run. After that, you must run as normal python script in their 
+terminal, as "python NAME_OF_SCRIPT". The main.py, opencv.py and nanoleaf_script must run independently.
+
+### Additional information
+
+While using the manual configuration of the camera, and you want to configure the ISO, Shutter Speed and aperture, the following information must be followed to right configure the script:
+
+#### ISO
+| ISO value | Index in control |
+|-----------|------------------|
+| ISO AUTO  | 0                |
+| ISO 50    | 1                |
+| ISO 64    | 2                |
+| ISO 80    | 3                |
+| ISO 100   | 4                |
+| ISO 125   | 5                |
+| ISO 160   | 6                |
+| ISO 200   | 7                |
+| ISO 250   | 8                |
+| ISO 320   | 9                |
+| ISO 400   | 10               |
+| ISO 500   | 11               |
+| ISO 640   | 12               |
+| ISO 800   | 13               |
+| ISO 1.000 | 14               |
+| ISO 1.250 | 15               |
+| ISO 1.600 | 16               |
+| ISO 2.000 | 17               |
+| ISO 2.500 | 18               |
+| ISO 3.200 | 19               |
+| ISO 4.000 | 20               |
+| ISO 5.000 | 21               |
+| ISO 6.400 | 22               |
+| ISO 8.000 | 23               |
+| ISO 10.000 | 24               |
+| ISO 12.000 | 25               |
+| ISO 16.000 | 26               |
+| ISO 20.000 | 27               |
+| ISO 25.600 | 28               |
+| ISO 32.000 | 29               |
+| ISO 40.000 | 30               |
+| ISO 51.200 | 31               |
+| ISO 64.000 | 32               |
+| ISO 80.000 | 33               |
+| ISO 102.400 | 34               |
+
+### Aperture
+| Aperture value | Index in control |
+|----------------|------------------|
+| F2, 79999      | 0                |
+| F3, 19999      | 1                |
+| F3, 5          | 2                |
+| F4             | 3                |
+| F4, 5          | 4                |
+| F5             | 5                |
+| F5, 59999      | 6                |
+| F6, 29999      | 7                |
+| F7, 09999      | 8                |
+| F8             | 9                |
+| F9             | 10               |
+| F10            | 11               |
+| F11            | 12               |
+| F13            | 13               |
+| F14            | 14               |
+| F16            | 15               |
+| F18            | 16               |
+| F20            | 17               |
+| F22            | 18               |
+
+### Shutter Speed
+| Shutter speed | Index in control |
+|---------------|------------------|
+| Bulb          | 0                |
+| 30"           | 1                |
+| 25"           | 2                |
+| 20"           | 3                |
+| 15"           | 4                |
+| 13"           | 5                |
+| 10"           | 6                |
+| 8"            | 7                |
+| 6"            | 8                |
+| 5"            | 9                |
+| 4"            | 10               |
+| 3.2"          | 11               |
+| 2.5"          | 12               |
+| 2"            | 13               |
+| 1.6"          | 14               |
+| 1.3"          | 15               |
+| 1"            | 16               |
+| 0.8"          | 17               |
+| 0.6"          | 18               |
+| 0.5"          | 19               |
+| 0.4"          | 20               |
+| 1/3           | 21               |
+| 1/4           | 22               |
+| 1/5           | 23               |
+| 1/6           | 24               |
+| 1/8           | 25               |
+| 1/10          | 26               |
+| 1/13          | 27               |
+| 1/15          | 28               |
+| 1/20          | 29               |
+| 1/25          | 30               |
+| 1/30          | 31               |
+| 1/40          | 32               |
+| 1/50          | 33               |
+| 1/60          | 34               |
+| 1/80          | 35               |
+| 1/100         | 36               |
+| 1/125         | 37               |
+| 1/160         | 38               |
+| 1/200         | 39               |
+| 1/250         | 40               |
+| 1/320         | 41               |
+| 1/400         | 42               |
+| 1/500         | 43               |
+| 1/640         | 44               |
+| 1/800         | 45               |
+| 1/1.000       | 46               |
+| 1/1.250       | 47               |
+| 1/1.600       | 48               |
+| 1/2.000       | 49               |
+| 1/2.500       | 50               |
+| 1/3.200       | 51               |
+| 1/4.000       | 52               |
+| 1/5.000       | 53               |
+| 1/6.400       | 54               |
+| 1/8.000       | 55               |
+
+# aditional information
+
+developer: Fabio Serra Pereira
+
+e-mail: serrafabio10@outlook.com
+
+Note: to avoid the sharing of this repository, all the changes which were previosly made in C++ script of the SDK were considered irrelevant, therefore the code used is what the Sony distributes.
