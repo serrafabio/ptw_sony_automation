@@ -42,21 +42,20 @@ NOTE 2: Changing the path for the RemoteCli.exe can bring deviations to the SDK 
 
 # Explanation of the Scripts
 ## Description
-This repository contains 4 single scripts which offer the automation of the platform, controlling the lights LEDs, shutting a photo in the camera and mirror the image of the camera in the pc. The 
-scripts main.py, opencv.py and nanoleaf_script.py **must run independently**.
+This repository contains 2 single scripts which offer the automation of the platform, controlling the lights LEDs, shutting a photo in the camera and mirror the image of the camera in the pc. The 
+scripts main.py **must run pre-configured before initializing**.
 
 ## Scripts
-The 4 scripts presented are:
+The 2 scripts presented are:
 - [ ] main.py: this script control the ptw_sony_camera.py, configuring the camera manually with ISO, Shutter Speed and Aperture. The taken picture must be saved in the directory where the main.py 
-  function is located.
+  function is located. It also start the camera display to mirror in the pc, then the user can check the camera image before shutting a photo. The fourth functionality of this script is to connect 
+  with the LEDs and turn on each LED independently. This script interact with the user. 
 - [ ] ptw_sony_camera.py: class with the control and connection with the RemoteCli.exe file. It can control the ISO, Shutter Speed and Aperture if the camera is the MANUAL mode. This class take a 
   single picture and store in the path where the python script is located.
-- [ ] opencv.py: script to connect the camera and display the video as webcam in the computer.
-- [ ] nanoleaf_script.py: this script controls the LEDS and turn on the selected LED.
 
 ## How to use?
-the scripts contain in the begging of their sections " ### configuration ### " tab, which the user must interact to the script to run. After that, you must run as normal python script in their 
-terminal, as "python NAME_OF_SCRIPT". The main.py, opencv.py and nanoleaf_script must run independently.
+the "main.py" script contain in the begging of their sections " ### configuration ### " tab, which the user must interact to the script before run. After that, you must run as normal python script in 
+its terminal, as "python main.py". The script can be easily understand with the commands that must be given to control each action wished.
 
 ### Additional information
 
