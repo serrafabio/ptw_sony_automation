@@ -32,7 +32,7 @@ shutter_speed= "1"
 aperture = "1"
 
 # set the camera to mirror in the computer
-cam = 1
+cam = 0
 
 # Set the IP Address of the Connection with the LEDs: API connection
 IP_ADDRESS = "192.168.137.195"
@@ -54,7 +54,7 @@ ids = [1,1,1,1,1,1,0]
 continue_loop = True
 video_active = True
 
-def shut_photo():
+def shut_photo(sony_7r):
     """
     Function to shut a picture using the camera
     :return: None
@@ -67,7 +67,7 @@ def shut_photo():
     # shut picture
     sony_7r.trigger_photo()
 
-def configure_specs():
+def configure_specs(sony_7r):
     """
     Function to set the specifications to the camera in the MANUAL mode
     :return:None
@@ -184,21 +184,19 @@ The commands must be all given as letter to work!
             thread_1.start()
             time.sleep(10)
 
-        # print the commands
-
         # read the input
-        inp = input("Please insert the command [s: shut picture; s: set specs in the MANUAL mode: ISO, shutter speed and aperture; l: turn the LED on; q: quit]:")
+        inp = input("Please insert the command [s: shut picture; m: set specs in the MANUAL mode: ISO, shutter speed and aperture; l: turn the LED on; q: quit]:")
 
         # Conditions:
         if inp == "s":
             # shut the picture
-            shut_photo()
+            shut_photo(sony_7r)
             # correction to avoid to reinitialize the camera
             video_active = True
         # set the Manual SPECs in the camera
-        elif inp == "s":
+        elif inp == "m":
             # configure camera
-            configure_specs()
+            configure_specs(sony_7r)
             # correction to avoid to reinitialize the camera
             video_active = True
         elif inp == "l":
