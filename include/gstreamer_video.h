@@ -7,13 +7,13 @@
 
 #include <gst/gst.h>
 
-// Função principal para rodar o pipeline do GStreamer
+// Main function to run the GStreamer
 void run_gstreamer_pipeline();
 
-// Função de callback para lidar com mensagens do GStreamer
+// Callback function to handle with the messages
 static gboolean bus_callback(GstBus* bus, GstMessage* msg, gpointer data);
 
-// Registrar o callback do bus
+// Callback function to the bus
 void register_bus_callback(GstElement* pipeline);
 
 #endif // GSTREAMER_VIDEO_H

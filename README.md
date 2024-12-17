@@ -73,6 +73,8 @@ cd Debug
 .\GStreamerExample.exe
 ```
 
+If the build folder is not empty, make it empty before building a new solution.
+
 ## Build Sony SDK
 The following instructions were gotten from the Sony SDK Instruction manual:
 1. Extract the SDK in folder, where you want to build
