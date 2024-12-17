@@ -9,6 +9,8 @@ REQUIREMENT: this script only work with the RemoteCli.exe - notice to give the r
 import time
 import threading
 import cv2
+import subprocess
+import os
 
 from ptw_sony_camera import Camera
 
@@ -59,9 +61,6 @@ def shut_photo(sony_7r):
     Function to shut a picture using the camera
     :return: None
     """
-    # close the opencv if it is open
-    with open("stop_opencv.txt", 'w') as f:
-        f.write("0")
     # wait 5 sec
     time.sleep(5)
     # shut picture
@@ -72,9 +71,6 @@ def configure_specs(sony_7r):
     Function to set the specifications to the camera in the MANUAL mode
     :return:None
     """
-    # close the opencv if it is open
-    with open("stop_opencv.txt", 'w') as f:
-        f.write("0")
     # wait 5 sec
     time.sleep(5)
 
@@ -84,55 +80,29 @@ def configure_specs(sony_7r):
     sony_7r.set_aperture(aperture)
 
 
-def start_opencv():
+def start_gstreamer():
     """
     Function to init the opencv package and mirror the camera display
     :return: None
     """
     # connect the opencv with the following camera:
-    cap = cv2.VideoCapture(cam)
+    return subprocess.Popen(
+        [os.getcwd()+os.sep+"build"+os.sep+"Debug"+os.sep+"GStreamerExample.exe"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
 
-    # if error to connect with the camera
-    if not cap.isOpened():
-        print("Error to access the camera.")
-        exit()
-
-    # Define the resolution to the camera
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 4096)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
-
-    # check if the program is not running
-    # here we set a command, if the main script is running the video must be stopped
-    # if 0 is the value in the file, it must stop the video, otherwise it can show the video
-    f = open("stop_opencv.txt", 'w')
-    f.write("1")
-    value = 1
-    while value == 1:
-        # Capture a frame
-        ret, frame = cap.read()
-        if ret:
-            # Show the image
-            cv2.imshow('Colourful image', frame)
-        else:
-            print("Error to get the image.")
-
-        with open("stop_opencv.txt", 'r') as f:
-            value = int(f.read())
-
-        # verify if the key 'q' was pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            value = 0
-            break
-
-        # Verify if the windows was closed
-        if cv2.getWindowProperty('Colourful image', cv2.WND_PROP_VISIBLE) < 1:
-            print("Window closed by the user.")
-            value = 0
-            break
-
-    # Release the camera and destroy
-    cap.release()
-    cv2.destroyAllWindows()
+def stop_gstreamer(process):
+    """
+    Function to stop the streaming of display
+    :return: None
+    """
+    try:
+        # Close stdin and the connection
+        process.terminate()
+    except:
+        print("Camera is not connected to the computer")
 
 def start_LEDs():
     """
@@ -179,22 +149,27 @@ The commands must be all given as letter to work!
     # start the loop
     while continue_loop:
         if video_active:
-            thread_1 = threading.Thread(target=start_opencv, daemon=True)
+            pr = start_gstreamer()
+            #thread_1 = threading.Thread(target=, daemon=True)
             # display the camera image
-            thread_1.start()
-            time.sleep(10)
+            #thread_1.start()
+            #time.sleep(5)
 
         # read the input
         inp = input("Please insert the command [s: shut picture; m: set specs in the MANUAL mode: ISO, shutter speed and aperture; l: turn the LED on; q: quit]:")
 
         # Conditions:
         if inp == "s":
+            # stop displaying the camera
+            stop_gstreamer(pr)
             # shut the picture
             shut_photo(sony_7r)
             # correction to avoid to reinitialize the camera
             video_active = True
         # set the Manual SPECs in the camera
         elif inp == "m":
+            # stop displaying the camera
+            stop_gstreamer(pr)
             # configure camera
             configure_specs(sony_7r)
             # correction to avoid to reinitialize the camera
@@ -208,8 +183,7 @@ The commands must be all given as letter to work!
             video_active = False
         elif inp == "q":
             # close the opencv if it is open
-            with open("stop_opencv.txt", 'w') as f:
-                f.write("0")
+            stop_gstreamer(pr)
             # close program
             continue_loop = False
             # correction to avoid to reinitialize the camera
@@ -220,7 +194,7 @@ The commands must be all given as letter to work!
             video_active = False
 
     # close threads
-    try:
-        thread_1.join()
-    except:
-        print("Thread probably wasn't initialize")
+    #try:
+    #    thread_1.join()
+    #except:
+    #    print("Thread probably wasn't initialize")

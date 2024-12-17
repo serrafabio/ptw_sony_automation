@@ -9,6 +9,8 @@ To run this software the following tools are required:
  - [ ] [Visual Studio 2022](https://visualstudio.microsoft.com/vs/)
  - [ ] [Cmake 3.31-1: Windows x64 ZIP](https://cmake.org/download/) --> follow [this video](https://www.youtube.com/watch?v=8_X5Iq9niDE) for the correct installation. Restart your pc if its necessary.
  - [ ] [Windows SDK version 10.0 (and above)](https://developer.microsoft.com/en-gb/windows/downloads/windows-sdk/) --> install either via Visual Studio or via [this video instructions](https://www.youtube.com/watch?v=dk6BYxr3Ovk)
+ - [ ] [GStreamer MSVC 64-bits (2019, Release CRT), runtime installer](https://gstreamer.freedesktop.org/download/#windows)
+ - [ ] [MSYS2](https://github.com/msys2/msys2-installer/releases/download/2024-12-08/msys2-x86_64-20241208.exe)
 
 Python packages required:
  - [ ] [OpenCV2 4.10.0.84](https://pypi.org/project/opencv-python/)
@@ -26,6 +28,50 @@ the following instructions were gotten from the Sony SDK Instruction Manual, ava
 ![img_1.png](img_1.png)
 
 4. Check if the camera is connected with the "Device Manager", it must be in the "libusbK Usb Device" with the name "ILCE-7RM5"
+
+## GStreamer
+
+To make GStreamer works, it has a complicated installation, which will be described further more. 
+1) To start install the Runtime installer using the *complete version* of the installer
+2) After installing the GStreamer, you need to add the following commands for the environment variables of Windows 
+   2.1) Write Environment Variables in Windows search bar
+   2.2) Environment Variables -> System Variables
+   2.3) Into PATH add
+  ```
+  C:\gstreamer\1.0\msvc_x86_64\bin
+  C:\gstreamer\1.0\msvc_x86_64\lib
+  C:\gstreamer\1.0\msvc_x86_64\include\gstreamer-1.0
+  C:\gstreamer\1.0\msvc_x86_64\lib\pkgconfig
+  ```
+  2.4) Add the env. variable PKG_CONFIG_PATH
+  ````
+  C:\gstreamer\1.0\msvc_x86_64\lib\pkgconfig
+  ````
+3) The next step is to install the [MSYS2](https://www.msys2.org/), given above. The in the prompt write:
+  ```
+  pacman -S mingw-w64-x86_64-pkg-config
+  ```
+  3.1) You need add to the PATH in the environmental variables the following path:
+  ```
+  C:\msys64\mingw64\bin
+  ```
+### How to build the CMAKE File
+For this project you can find 4 files:
+- src/main.cpp: which contains the main file and start to run the gstreamer_video.cpp
+- src/gstreamer_video.cpp: contains the main function which give the properly inputs for the GStreamer to stream the display of the camera
+- include/gstreamer.h: contains the headers of gstreamer_video.cpp
+- CMakeList.txt: contains the commands to build the project. Here the right connection with the GStreamer toolchain is established.
+
+To build the executable application used by the python application is:
+```
+cd DIRECTORY_WITH_CMAKE_PROJECT
+mkdir build 
+cd build
+cmake ..\
+cmake --build .
+cd Debug
+.\GStreamerExample.exe
+```
 
 ## Build Sony SDK
 The following instructions were gotten from the Sony SDK Instruction manual:
