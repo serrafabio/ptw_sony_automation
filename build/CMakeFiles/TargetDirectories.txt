@@ -1,0 +1,3 @@
+C:/Users/serra/OneDrive/Documentos/WiP/HiWi/Alex/ptw_sony_automation/build/CMakeFiles/GStreamerExample.dir
+C:/Users/serra/OneDrive/Documentos/WiP/HiWi/Alex/ptw_sony_automation/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/serra/OneDrive/Documentos/WiP/HiWi/Alex/ptw_sony_automation/build/CMakeFiles/ZERO_CHECK.dir
