@@ -12,11 +12,15 @@ import cv2
 import subprocess
 import os
 
+import matplotlib.image as mpimg
+
 from ptw_sony_camera import Camera
 
 from nanoleafapi import WHITE
 
 from nanoleafapi import Nanoleaf, NanoleafDigitalTwin
+
+from PIL import Image
 
 ##### CONFIGURATION #####
 
@@ -38,6 +42,7 @@ cam = 0
 
 # Set the IP Address of the Connection with the LEDs: API connection
 IP_ADDRESS = "192.168.137.195"
+
 
 '''
 Set 1 for the LED to start and 0 to the LED to remain shut down
@@ -133,6 +138,46 @@ def start_LEDs():
     except Exception as e:
         print(f"Error captured: {e}")
 
+def show_images():
+    # start the camera
+    sony_7r = Camera(dir_path)
+
+    # Initial configurations
+    folder_path = os.path.abspath(os.getcwd())
+    check_interval = 1  # Time (in seconds) between each check for new images
+
+    # Variables to control execution
+    last_image = None
+    current_image = None
+
+    while True:
+        # make the photo
+        sony_7r.shut_livepreview()
+
+        # Get the list of files in the folder
+        files = sorted(os.listdir(folder_path))  # Sort files by name
+        images = [file for file in files if file.lower().endswith((".jpg"))]
+
+        if images:
+            # Select the last created image (by name order)
+            new_image = os.path.join(folder_path, images[-1])
+
+            # Check if it is a new image
+            if new_image != last_image:
+                # Close the previous image if it is open
+                if current_image is not None:
+                    current_image.close()
+
+                # Open the new image
+                current_image = Image.open(new_image)
+                current_image.show()
+
+                # Update the image tracker
+                last_image = new_image
+
+        # Wait before checking again
+        time.sleep(check_interval)
+
 
 ####### main Script #######
 if __name__ == '__main__':
@@ -149,10 +194,10 @@ The commands must be all given as letter to work!
     # start the loop
     while continue_loop:
         if video_active:
-            pr = start_gstreamer()
-            #thread_1 = threading.Thread(target=, daemon=True)
+            #pr = start_gstreamer()
+            thread_1 = threading.Thread(target=show_images, daemon=True)
             # display the camera image
-            #thread_1.start()
+            thread_1.start()
             #time.sleep(5)
 
         # read the input
@@ -194,7 +239,7 @@ The commands must be all given as letter to work!
             video_active = False
 
     # close threads
-    #try:
-    #    thread_1.join()
-    #except:
-    #    print("Thread probably wasn't initialize")
+    try:
+        thread_1.join()
+    except:
+        print("Thread probably wasn't initialize")

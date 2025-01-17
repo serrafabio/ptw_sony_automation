@@ -72,6 +72,14 @@ class Camera():
         # execute the commands
         self.execution()
 
+    ### NEED TO VERIFY ###
+    def shut_livepreview(self):
+        # define the commands to set the shut speed
+        ## CORRECTION OF THE COMMANDS MAYBE REQUIRED
+        self.commands = ["1\n", "7\n", "1\n", "y\n", "0\n", 'x\n']
+        # execute the commands
+        self.execution()
+
     def execution(self):
         # start the connection
         self.connection()

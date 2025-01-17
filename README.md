@@ -24,8 +24,8 @@ the following instructions were gotten from the Sony SDK Instruction Manual, ava
 2. Connect the camera
 3. With the camera connected follow the instructions of the image
 
-![img.png](img.png)
-![img_1.png](img_1.png)
+![img.png](a0.png)
+![img_1.png](a1.png)
 
 4. Check if the camera is connected with the "Device Manager", it must be in the "libusbK Usb Device" with the name "ILCE-7RM5"
 

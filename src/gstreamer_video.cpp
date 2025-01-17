@@ -31,8 +31,9 @@ void run_gstreamer_pipeline() {
 
     // Define the GStreamer pipeline string
     // This pipeline handles video and audio decoding using OpenGL rendering
-    char *pipeLineString = "esvideosrc name=esvdsrc ! queue ! h264parse ! avdec_h264 ! glupload ! glcolorconvert ! glimagesink name=glsink "
-                           "esaudiosrc name=esausrc ! queue ! aacparse ! avdec_aac ! audioconvert ! directsoundsink name=ausnk";
+    // char *pipeLineString = "esvideosrc name=esvdsrc ! queue ! h264parse ! avdec_h264 ! glupload ! glcolorconvert ! glimagesink name=glsink "
+    //                       "esaudiosrc name=esausrc ! queue ! aacparse ! avdec_aac ! audioconvert ! directsoundsink name=ausnk";
+    char *pipeLineString = "ksvideosrc device-index=1 ! videoconvert ! autovideosink";
 
     // Uncomment the following line to test with a webcam pipeline instead
     //char *pipeLineString = "ksvideosrc device-index=0 ! videoconvert ! autovideosink"; // webcam
